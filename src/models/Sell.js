@@ -8,15 +8,7 @@ module.exports = (sequelize) => {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV1,
     },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    time: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
-    place: {
+       place: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -26,8 +18,11 @@ module.exports = (sequelize) => {
     },
     total: {
       type: DataTypes.FLOAT, 
-      allowNull: true,
     },
+    status: {
+      type:DataTypes.STRING,
+      defaultValue: false,
+    }
     
   },
   {

@@ -27,11 +27,12 @@ module.exports = (sequelize) => {
                 defaultValue: null,
             },
             image: {
-                type: DataTypes.JSON,
-                allowNull: true,
+                type: DataTypes.STRING,
+                isUrl: true,
             },
             imageCloudinary: {
-          type: DataTypes.ARRAY(DataTypes.JSON), // Usamos un array de objetos JSON
+          type: DataTypes.ARRAY(DataTypes.JSON),
+          allowNull: true, // Usamos un array de objetos JSON
             },
             isAvailable: {
                 type: DataTypes.BOOLEAN,
@@ -39,7 +40,7 @@ module.exports = (sequelize) => {
             },
             price: {
                 type: DataTypes.FLOAT,
-                allowNull: false,
+                allowNull: true,
             },
             stock: {
                 type: DataTypes.INTEGER,
