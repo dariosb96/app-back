@@ -1,6 +1,4 @@
-
-
-const {createProduct, getProductById, getAllProducts} = require("../controllers/product_controller")
+const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock} = require("../controllers/product_controller")
 
 const getProductsHandler = async (req, res) =>{
      const {name} = req.query;
@@ -24,16 +22,46 @@ const create_Product = async(req,res) =>{
      const newProduct = await createProduct(name, category, color, description, image, price, stock);
      res.status(201).json(newProduct);
    } catch(error) {
-        res.status(400).json({ error: error.message}); 
+        res.status(400).send({error: error.message}); 
    }
 };
   
 const getItemHandler = async (req,res) =>{ 
-  const {id} = req.params;
-  const Product = await getProductById(id);
- res.send(`informacion de producto ${id}`);
+
+     try {
+          const {id} = req.params;
+          const product = await getProductById(id);
+          if (product) {
+               res.status(200).json(product);
+             } else {
+               res.status(404).json({ mensaje: "Product not found" });
+             }
+        
+     }catch(error) {
+          res.status(400).send({error: error.message});
+     }
+ 
+}
+
+const deleteHandler = async (req, res) => {
+     try {
+          const {id} = req.params;
+          await deleteProduct(id);
+          res.status(200).json({message: `Product removed ${id}`});
+     }catch(error) {
+          res.status(400).send({error: error.message});
+     }
+}
+const stockHandler = async (req, res) => {
+     try {
+          const {id} = req.params;
+          await deleteStock(id);
+          res.status(200).json({message: `Product not available ${id}`});
+     }catch(error) {
+          res.status(400).send({error: error.message});
+     }
 }
 
 module.exports = { create_Product,
   getProductsHandler, 
-  getItemHandler};
+  getItemHandler, deleteHandler, stockHandler};

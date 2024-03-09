@@ -11,7 +11,7 @@ const getProductById = async (id) => {
 const getAllProducts = async (name) =>{
     const products = await Product.findAll();
     if (name){
-        const productName = products.filter( product => productRouter.name.includes(name)) ;
+        const productName = products.filter( product => product.name.includes(name)) ;
 
       if (productName.length === 0) {
         return "Product not found";
@@ -21,4 +21,20 @@ const getAllProducts = async (name) =>{
 
     return products;
 }
-module.exports = {createProduct, getProductById, getAllProducts};
+const deleteProduct = async (id) => {
+    const product = await Product.findByPk(id);
+    if (!product) {
+        throw new Error("Product not found");
+    }
+    await product.destroy();
+    return product;
+}
+
+const deleteStock = async (id) =>{
+    const product = await Product.findByPk(id);
+    if (!product) throw new Error("Product not found");
+    if (!product.isAvailable) throw new Error("Product already deleted");
+    product.isAvailable = false;
+    await product.save();
+}
+module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock};
