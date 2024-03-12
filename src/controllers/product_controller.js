@@ -37,4 +37,15 @@ const deleteStock = async (id) =>{
     product.isAvailable = false;
     await product.save();
 }
-module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock};
+
+const updateProduct = async (id, newData) => {
+    const product = await Product.findByPk(id);
+
+    if(!product){
+        throw new Error("Product not found");
+    }
+
+    await product.update(newData);
+    return product;
+}
+module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct};

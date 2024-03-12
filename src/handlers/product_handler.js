@@ -1,4 +1,4 @@
-const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock} = require("../controllers/product_controller")
+const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct} = require("../controllers/product_controller")
 
 const getProductsHandler = async (req, res) =>{
      const {name} = req.query;
@@ -20,7 +20,7 @@ const create_Product = async(req,res) =>{
    try{
      const {name, category, color, description, image, price, stock} = req.body;
      const newProduct = await createProduct(name, category, color, description, image, price, stock);
-     res.status(201).json(newProduct);
+     res.status(201).send("product created!");
    } catch(error) {
         res.status(400).send({error: error.message}); 
    }
@@ -62,6 +62,19 @@ const stockHandler = async (req, res) => {
      }
 }
 
+const updateHandler = async (req, res) =>{
+     try  {
+          const {id} = req.params;
+          const newData = req.body;
+          const updatedProduct = await updateProduct(id, newData);
+
+          res.status(200).json({ message: "Product updated successfully", updatedProduct });
+          
+     }catch (error){
+          res.status(400).send({error: error.message});
+     }
+}
+
 module.exports = { create_Product,
   getProductsHandler, 
-  getItemHandler, deleteHandler, stockHandler};
+  getItemHandler, deleteHandler, stockHandler, updateHandler};
