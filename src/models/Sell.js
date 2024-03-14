@@ -16,11 +16,8 @@ module.exports = (sequelize) => {
       type: DataTypes.ARRAY(DataTypes.JSON),
       allowNull: false,
     },
-    total: {
-      type: DataTypes.FLOAT, 
-    },
-    status: {
-      type:DataTypes.STRING,
+       status: {
+      type: DataTypes.STRING,
       defaultValue: false,
     }
     

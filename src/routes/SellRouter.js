@@ -1,10 +1,14 @@
-// const { Router } = require('express');
-// const SellRouter = Router();
+const { Router } = require('express');
+const { getSellsHandler, getSellBy, createSellHandler, updateS, deleteSellHandler } = require('../handlers/sell_handler');
+const SellRouter = Router();
 
-// // ... tus rutas y configuraciones aquí
-// SellRouter.get("/",)
-// SellRouter.get("/:id",)
-// // SellRouter.post("/", create_Sell);
+// ... tus rutas y configuraciones aquí
+SellRouter.get("/", getSellsHandler);
+SellRouter.get("/:id",getSellBy);
+SellRouter.post("/", createSellHandler);
+SellRouter.delete("/:id", deleteSellHandler);
+SellRouter.put("/:id", updateS);
 
 
-// module.exports = { sellRouter};
+
+module.exports.sellRouter =  SellRouter;

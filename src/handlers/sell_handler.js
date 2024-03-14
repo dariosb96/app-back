@@ -1,32 +1,54 @@
 const { error } = require("console");
-const { createSell, getSellById, getSellByDate } = require("../controllers/deliver_controller");
+const {createSell, getSellById,  getSell, deleteSell, updateSell } = require("../controllers/sell_controller");
 
-const getSellsHandler = (req, res)=>{
-    const {id} = req.params;
-    if(id) res.send(`Venta id: ${id}`);
-    else res.send("todas las ventas");
+const getSellsHandler = async (req, res)=>{
+    try{
+        const sells = await getSell();
+        res.status(200).json(sells);
+        
+    }catch (error){
+        res.status(400).json({error: error.message});
+    }
+    
+}
+const getSellBy = async (req, res) =>{
+    try {
+        const {id}= req.params;
+        const sell = await getSellById(id)
+          res.status(200).json(sell); 
+    }catch (error){
+        res.status(400).json({error: error.message});
+    }
 }
 
 const createSellHandler = async (req, res) =>{
     try {
-         const {place, products,total } = req.body;
-         const newSell = await createSell(place, products, total);
+         const {place, products } = req.body;
+         const newSell = await createSell(place, products);
          res.status(200).json(newSell);
     }catch{
         res.status(400).json({error: error.message});
     }
 }
-const deleteSellHandler = async (req, req) =>{
+
+const deleteSellHandler = async (req, res) =>{
     try{
         const {id} = req.params;
-        const sell = await db.Sell.findByPk(id);
-        if(!sell){
-            return res.status(404).json({error: "Venta no encontrada"});
-        }
-        await sell.destroy();
-        res.status(200).json({message: "Venta eliminada!!!"});
+         await deleteSell(id);
+        res.status(200).json({message: `Sell ${id} removed`});
     }catch{
         console.error(error.message);
+        res.status(400).json({error: error.message});
+    }
+}
+
+const updateS = async (req, res) =>{
+    try{
+        const {id} = req.params;
+        const newData = req.body;
+        const sell = await updateSell(id, newData);
+        res.status(200).json({ message: "Sell updated"} );
+    }catch {
         res.status(400).json({error: error.message});
     }
 }
@@ -34,4 +56,7 @@ const deleteSellHandler = async (req, req) =>{
 module.exports = {
     getSellsHandler,
     createSellHandler,
+    deleteSellHandler,
+    getSellBy,
+    updateS
 }

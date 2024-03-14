@@ -2,6 +2,7 @@ const {Product} = require("../db");
 
 const createProduct = async (name, category, color, description, image, price, stock ) => {
     await Product.create({ name, category,color, description, image, price, stock });
+    return Product;
 }
 const getProductById = async (id) => {
     const product = await Product.findByPk(id);
