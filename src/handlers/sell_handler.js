@@ -23,11 +23,20 @@ const getSellBy = async (req, res) =>{
 
 const createSellHandler = async (req, res) =>{
     try {
-         const {place, products } = req.body;
-         const newSell = await createSell(place, products);
+         const {place, products,status, year,  month, day, time } = req.body;
+         const newSell = await createSell(
+            place, 
+            products,
+           status,
+            year,
+            month, 
+            day,
+            time
+             );
          res.status(200).json(newSell);
     }catch{
         res.status(400).json({error: error.message});
+        
     }
 }
 
@@ -37,7 +46,7 @@ const deleteSellHandler = async (req, res) =>{
          await deleteSell(id);
         res.status(200).json({message: `Sell ${id} removed`});
     }catch{
-        console.error(error.message);
+       console.error('Error creating sell:', error); 
         res.status(400).json({error: error.message});
     }
 }

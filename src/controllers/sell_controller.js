@@ -1,7 +1,7 @@
 const {Sell} = require("../db");
 
-const createSell = async (place, products ) =>{
-   const newSell =  await Sell.create({place, products });
+const createSell = async (place, products,status, year,  month, day, time ) =>{
+   const newSell =  await Sell.create({place, products, status, year, month, day, time });
     return newSell;
 }
 

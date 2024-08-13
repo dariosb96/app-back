@@ -18,8 +18,8 @@ try {
 
 const create_Product = async(req,res) =>{
    try{
-     const {name, category, color, description, image, price, stock} = req.body;
-     const newProduct = await createProduct(name, category, color, description, image, price, stock);
+     const {name, category, color, description, image, price, buyprice, stock} = req.body;
+     const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock);
      res.status(201).send("product created!");
    } catch(error) {
         res.status(400).send({error: error.message}); 

@@ -17,14 +17,38 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
        status: {
-      type: DataTypes.STRING,
-      defaultValue: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    month: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min:1,
+        max: 12,
+      }
+    },
+    day: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1,
+        max: 31,
+      }
+    },
+    time: {
+      type: DataTypes.TIME,
+      allowNull: false,
     }
     
   },
   {
     timestamps: true,
-    createdAt: "date",
+    createdAt: "createdAt",
     updatedAt: false,
   });
 };
