@@ -1,12 +1,24 @@
 const {Product} = require("../db");
 
-const createProduct = async (name, category, color, description, image, price, buyprice, stock ) => {
-    await Product.create({ name, category,color, description, image, price, buyprice, stock });
-    return Product;
+const createProduct = async (name, category, color, description, image, price, buyprice, stock, userId ) => {
+    const  newproduct  = await Product.create({ name, category,color, description, image, price, buyprice, stock, userId });
+    return newproduct;
 }
 const getProductById = async (id) => {
     const product = await Product.findByPk(id);
-    return product;
+
+    if(product){
+        return product;
+    }
+    const userId = id;
+    const productsByUser = await Product.findAll({where: {userId}});
+
+    if(productsByUser.length === 0){
+        throw new Error("Product not found")
+    }
+
+    return productsByUser;
+    
 }
 
 const getAllProducts = async (name) =>{
@@ -49,4 +61,19 @@ const updateProduct = async (id, newData) => {
     await product.update(newData);
     return product;
 }
-module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct};
+
+const getProductsByCategory = async (category) => {
+    try {
+        const products = await Product.findAll({where: {category}});
+        if (products.length === 0){
+            return "no products found in this category";
+        }
+        return products;
+    }catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+
+
+module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct, getProductsByCategory, };

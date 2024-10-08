@@ -3,17 +3,13 @@ require("dotenv").config();
 
 const { productRouter }  = require("./ProductRouter");
 const { sellRouter }  = require("./SellRouter");
-const { deliverRouter }  = require("./DeliverRouter");
+const { userRouter } = require("./UserRouter");
 
 const router = Router();
 
-// Configurar los routers
-// Ejemplo: router.use('/auth', authRouter);
-
 router.use("/products", productRouter); 
-
 router.use("/sells", sellRouter);
+router.use("/users", userRouter);
 
-// router.use("/delivers", deliverRouter);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct} = require("../controllers/product_controller")
+const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct, getProductsByCategory, } = require("../controllers/product_controller")
 
 const getProductsHandler = async (req, res) =>{
      const {name} = req.query;
@@ -18,9 +18,10 @@ try {
 
 const create_Product = async(req,res) =>{
    try{
-     const {name, category, color, description, image, price, buyprice, stock} = req.body;
-     const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock);
-     res.status(201).send("product created!");
+     const {name, category, color, description, image, price, buyprice, stock } = req.body;
+     const userId= req.userId;
+     const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock, userId);
+     res.status(201).json(newProduct);
    } catch(error) {
         res.status(400).send({error: error.message}); 
    }
@@ -63,7 +64,7 @@ const stockHandler = async (req, res) => {
 }
 
 const updateHandler = async (req, res) =>{
-     try  {
+     try {
           const {id} = req.params;
           const newData = req.body;
           const updatedProduct = await updateProduct(id, newData);
@@ -75,6 +76,20 @@ const updateHandler = async (req, res) =>{
      }
 }
 
+
+const getByCategory = async ( req, res) => {
+     const { category} = req.params;
+ 
+     try {
+         const products = await getProductsByCategory(category) ;
+         res.status(200).json(products);
+     }catch (error){
+         res.status(400).json({error: error.message})
+     }
+ }
+
+
+
 module.exports = { create_Product,
   getProductsHandler, 
-  getItemHandler, deleteHandler, stockHandler, updateHandler};
+  getItemHandler, deleteHandler, stockHandler, updateHandler, getByCategory};

@@ -16,6 +16,9 @@ module.exports = (sequelize) => {
             category: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true, 
+                },
             },
             color: {
                 type: DataTypes.STRING,
@@ -32,7 +35,7 @@ module.exports = (sequelize) => {
             },
             imageCloudinary: {
           type: DataTypes.ARRAY(DataTypes.JSON),
-          allowNull: true, // Usamos un array de objetos JSON
+          allowNull: true, 
             },
             isAvailable: {
                 type: DataTypes.BOOLEAN,
@@ -50,6 +53,15 @@ module.exports = (sequelize) => {
                 type: DataTypes.INTEGER,
                 defaultValue: 0,
             },
+            userId: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                references: {
+                    model: "Users",
+                    key: "id",
+                },
+                onDelete: "CASCADE",
+            }
         },
         { timestamps: false }
     );
