@@ -11,7 +11,9 @@ try {
           return res.status(200).json(AllProducts)
      }
 }catch (error) {
+     console.log(error);
      return res.status(400).send({error: error.message})
+     
 }
 }
 
@@ -23,6 +25,7 @@ const create_Product = async(req,res) =>{
      const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock, userId);
      res.status(201).json(newProduct);
    } catch(error) {
+   console.log(error)
         res.status(400).send({error: error.message}); 
    }
 };
@@ -53,6 +56,7 @@ const deleteHandler = async (req, res) => {
           res.status(400).send({error: error.message});
      }
 }
+
 const stockHandler = async (req, res) => {
      try {
           const {id} = req.params;

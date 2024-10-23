@@ -10,12 +10,12 @@ const UserRouter = Router();
 // UserRouter.delete("/:id",  deleteUserHandler);
 // UserRouter.put("/:id",  updateUserHandler);
 
-UserRouter.get("/", verifyToken, getUsers);
+UserRouter.post("/",  createUserHandler);
+UserRouter.get("/",  getUsers);
 UserRouter.get("/:id", verifyToken, getUserBy);
-UserRouter.post("/", verifyToken, createUserHandler);
 UserRouter.delete("/:id",verifyToken,  deleteUserHandler);
 UserRouter.put("/:id", verifyToken, updateUserHandler);
-UserRouter.post("login", LoginUserHandler);
+UserRouter.post("/login", LoginUserHandler);
 
 
 module.exports.userRouter = UserRouter;

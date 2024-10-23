@@ -1,8 +1,6 @@
 const {error} = require("console");
 const { getAllUsers, getUserByid, createUser, deleteUser, updateUser, loginUser } = require("../controllers/user_controller");
 
-
-
 const getUsers = async (req, res) => {
     try {
         const users = await getAllUsers();
@@ -60,6 +58,7 @@ const LoginUserHandler = async (req, res) => {
 
     try {
         const token = await loginUser(username, password);
+        console.log(token);
         res.status(200).json({token});
     }catch(error) {
         if(error.message ==="User not found"){
@@ -68,6 +67,7 @@ const LoginUserHandler = async (req, res) => {
             res.status(401).json({message: error.message});
         }else{
             res.status(500).json({message: error.message});
+            console.log(error)
         }
     }
 }
