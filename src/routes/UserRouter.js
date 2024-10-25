@@ -4,12 +4,6 @@ const verifyToken = require("../middleware");
 // const verifyToken  = require("../middleware");
 const UserRouter = Router();
 
-// UserRouter.get("/", getUsers);
-// UserRouter.get("/:id",  getUserBy);
-// UserRouter.post("/",  createUserHandler);
-// UserRouter.delete("/:id",  deleteUserHandler);
-// UserRouter.put("/:id",  updateUserHandler);
-
 UserRouter.post("/",  createUserHandler);
 UserRouter.get("/",  getUsers);
 UserRouter.get("/:id", verifyToken, getUserBy);

@@ -3,7 +3,7 @@ const { getSellsHandler, getSellBy, createSellHandler, updateS, deleteSellHandle
 const verifyToken = require('../middleware');
 const SellRouter = Router();
 
-// ... tus rutas y configuraciones aquí
+
 SellRouter.get("/", verifyToken, getSellsHandler);
 SellRouter.get("/:id",verifyToken, getSellBy);
 SellRouter.post("/",verifyToken,  createSellHandler);
