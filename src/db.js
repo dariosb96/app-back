@@ -2,15 +2,42 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
+// const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
+const {
+   DB_USER_LOCAL,
+   DB_PASSWORD_LOCAL,
+   DB_HOST_LOCAL,
+   DB_NAME_LOCAL,
+   DB_PORT_LOCAL,
+   DB_USER_RAILWAY,
+   DB_PASSWORD_RAILWAY,
+   DB_HOST_RAILWAY,
+   DB_NAME_RAILWAY,
+   DB_PORT_RAILWAY
+ } = process.env;
+ 
+// const sequelize = new Sequelize(
+//    `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+//    {
+//       logging: false, // set to console.log to see the raw SQL queries
+//       native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+//    }
+// );
+const DB_HOST = process.env.NODE_ENV === 'production' ? 'postgres.railway.internal' : 'localhost';
 
-const sequelize = new Sequelize(
-   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
-   {
-      logging: false, // set to console.log to see the raw SQL queries
-      native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-   }
-);
+
+
+// asegúrate de que esto esté en la parte superior
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+   logging: false,
+   dialectOptions: {
+     ssl: {
+       require: true,
+       rejectUnauthorized: false,
+     },
+   },
+});
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
