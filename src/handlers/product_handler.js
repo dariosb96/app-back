@@ -1,21 +1,36 @@
 const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct, getProductsByCategory, } = require("../controllers/product_controller")
-
-const getProductsHandler = async (req, res) =>{
-     const {name} = req.query;
-try {
-     if(name ){
-          const ProdName = await getAllProducts(name);
-          return res.status(200).json(ProdName);
-     } else {
-          const AllProducts = await getAllProducts();
-          return res.status(200).json(AllProducts)
-     }
-}catch (error) {
-     console.log(error);
-     return res.status(400).send({error: error.message})
+//primer get funcionando en deploy
+// const getProductsHandler = async (req, res) =>{
+//      const {name} = req.query;
+//      const userId= req.userId
+// try {
+//      if(name ){
+//           const ProdName = await getAllProducts(name);
+//           return res.status(200).json(ProdName);
+//      } else {
+//           const AllProducts = await getAllProducts();
+//           return res.status(200).json(AllProducts)
+//      }
+// }catch (error) {
+//      console.log(error);
+//      return res.status(400).send({error: error.message})
      
-}
-}
+// }
+// }
+
+const getProductsHandler = async (req, res) => {
+     const { name } = req.query;
+     const userId = req.userId; // Obtén el userId del token
+ 
+     try {
+         const products = await getAllProducts(userId, name);
+         return res.status(200).json(products);
+     } catch (error) {
+         console.log(error);
+         return res.status(400).send({ error: error.message });
+     }
+ };
+ 
 
 
 const create_Product = async(req,res) =>{
@@ -29,23 +44,35 @@ const create_Product = async(req,res) =>{
         res.status(400).send({error: error.message}); 
    }
 };
-  
-const getItemHandler = async (req,res) =>{ 
+  //primero funcionando en deploy
+// const getItemHandler = async (req,res) =>{ 
 
-     try {
-          const {id} = req.params;
-          const product = await getProductById(id);
-          if (product) {
-               res.status(200).json(product);
-             } else {
-               res.status(404).json({ mensaje: "Product not found" });
-             }
+//      try {
+//           const {id} = req.params;
+//           const product = await getProductById(id);
+//           if (product) {
+//                res.status(200).json(product);
+//              } else {
+//                res.status(404).json({ mensaje: "Product not found" });
+//              }
         
-     }catch(error) {
-          res.status(400).send({error: error.message});
-     }
+//      }catch(error) {
+//           res.status(400).send({error: error.message});
+//      }
+//  }
+
+const getItemHandler = async (req, res) => {
+     const { id } = req.params;
+     const userId = req.userId;
  
-}
+     try {
+         const product = await getProductById(id, userId);
+         res.status(200).json(product);
+     } catch (error) {
+         res.status(400).send({ error: error.message });
+     }
+ };
+ 
 
 const deleteHandler = async (req, res) => {
      try {

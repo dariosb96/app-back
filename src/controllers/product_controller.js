@@ -20,20 +20,39 @@ const getProductById = async (id) => {
     return productsByUser;
     
 }
+// !!!!! primer get funcionando en deploy
+// const getAllProducts = async (userId, name) =>{
+//     const products = await Product.findAll({where: {userId}});
+//     if (name){
+//         const productName = products.filter( product => product.name.includes(name)) ;
 
-const getAllProducts = async (name) =>{
-    const products = await Product.findAll();
-    if (name){
-        const productName = products.filter( product => product.name.includes(name)) ;
+//       if (productName.length === 0) {
+//         return "Product not found";
+//         }
+//         return productName;
+//     }
 
-      if (productName.length === 0) {
-        return "Product not found";
-        }
-        return productName;
+//     return products;
+// }
+
+//segundo get 
+const getAllProducts = async (userId, name) => {
+    const condition = { userId }; // Asegurarse de que solo busque los productos del usuario
+
+    if (name) {
+        condition.name = { [Sequelize.Op.iLike]: `%${name}%` }; // Filtrar por nombre si se proporciona
+    }
+
+    const products = await Product.findAll({ where: condition });
+
+    if (products.length === 0) {
+        return "No products found";
     }
 
     return products;
-}
+};
+
+
 const deleteProduct = async (id) => {
     const product = await Product.findByPk(id);
     if (!product) {
