@@ -110,9 +110,10 @@ const updateHandler = async (req, res) =>{
 
 const getByCategory = async ( req, res) => {
      const { category} = req.params;
+     const userId = req.userId;
  
      try {
-         const products = await getProductsByCategory(category) ;
+         const products = await getProductsByCategory(userId,category,) ;
          res.status(200).json(products);
      }catch (error){
          res.status(400).json({error: error.message})
