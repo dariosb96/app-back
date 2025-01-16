@@ -1,22 +1,5 @@
 const {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct, getProductsByCategory, } = require("../controllers/product_controller")
-//primer get funcionando en deploy
-// const getProductsHandler = async (req, res) =>{
-//      const {name} = req.query;
-//      const userId= req.userId
-// try {
-//      if(name ){
-//           const ProdName = await getAllProducts(name);
-//           return res.status(200).json(ProdName);
-//      } else {
-//           const AllProducts = await getAllProducts();
-//           return res.status(200).json(AllProducts)
-//      }
-// }catch (error) {
-//      console.log(error);
-//      return res.status(400).send({error: error.message})
-     
-// }
-// }
+const upload = require("../upload");
 
 const getProductsHandler = async (req, res) => {
      const { name } = req.query;
@@ -32,18 +15,40 @@ const getProductsHandler = async (req, res) => {
  };
  
 
+//create original local y deploy
 
-const create_Product = async(req,res) =>{
-   try{
-     const {name, category, color, description, image, price, buyprice, stock } = req.body;
-     const userId= req.userId;
-     const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock, userId);
-     res.status(201).json(newProduct);
-   } catch(error) {
-   console.log(error)
-        res.status(400).send({error: error.message}); 
-   }
-};
+// const create_Product = async(req,res) =>{
+//    try{
+//      const {name, category, color, description, image, price, buyprice, stock } = req.body;
+//      const userId= req.userId;
+//      const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock, userId);
+//      res.status(201).json(newProduct);
+//    } catch(error) {
+//    console.log(error)
+//         res.status(400).send({error: error.message}); 
+//    }
+// };
+
+const create_Product = async (req, res) => {
+     try {
+          console.log("Headers:", req.headers);  // Verifica los encabezados
+        console.log("Body:", req.body);  // Verifica el cuerpo
+        console.log("File:", req.file); 
+         const { name, category, color, description, price, buyprice, stock } = req.body;
+         const userId = req.userId;
+ 
+         // Si se ha subido una imagen, su URL estará en req.file.location
+         const image = req.file ? req.file.location : null;
+ 
+         const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock, userId);
+         res.status(201).json(newProduct);
+     } catch (error) {
+         console.log(error);
+         res.status(400).send({ error: error.message });
+     }
+ };
+ 
+
   //primero funcionando en deploy
 // const getItemHandler = async (req,res) =>{ 
 
@@ -94,19 +99,28 @@ const stockHandler = async (req, res) => {
      }
 }
 
-const updateHandler = async (req, res) =>{
-     try {
-          const {id} = req.params;
-          const newData = req.body;
-          const updatedProduct = await updateProduct(id, newData);
-
-          res.status(200).json({ message: "Product updated successfully", updatedProduct });
-          
-     }catch (error){
-          res.status(400).send({error: error.message});
-     }
-}
-
+const updateHandler = [
+     // Middleware para subir una imagen
+     async (req, res) => {
+         try {
+             const { id } = req.params;
+             const newData = req.body;
+             const image = req.file ? req.file.location : null; // URL de la nueva imagen, si se sube
+ 
+             if (image) {
+                 newData.image = image;
+             }
+ 
+             const updatedProduct = await updateProduct(id, newData);
+ 
+             res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+         } catch (error) {
+             console.error(error);
+             res.status(400).send({ error: error.message });
+         }
+     },
+ ];
+ 
 
 const getByCategory = async ( req, res) => {
      const { category} = req.params;

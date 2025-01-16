@@ -4,6 +4,10 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes = require('./routes/index.js');
 const cors = require('cors')
+const multer = require('multer');
+const path = require('path');
+
+
 require('./db.js');
 
 const server = express();
@@ -25,6 +29,22 @@ server.use(morgan('dev'));
 //   }
 //   next();
 // });
+// Middleware para parsear JSON
+server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
+
+// Configuración de multer para manejar archivos
+const storage = multer.diskStorage({
+   destination: (req, file, cb) => {
+      cb(null, path.join(__dirname, 'uploads')); // Carpeta donde se guardarán los archivos
+   },
+   filename: (req, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+   },
+});
+
+const upload = multer({ storage });
+
 
 server.use(cors({
   origin: 'http://localhost:5173', // URL front
@@ -43,5 +63,9 @@ server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(status).send(message);
 });
 
+server.use((req, res, next) => {
+  console.log(req.body); // Ver los datos recibidos
+  next();
+});
 
-module.exports = server;
+module.exports = {server, upload}

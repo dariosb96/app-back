@@ -32,11 +32,9 @@ module.exports = (sequelize) => {
             image: {
                 type: DataTypes.STRING,
                 isUrl: true,
+                allowNull: true,
             },
-            imageCloudinary: {
-          type: DataTypes.ARRAY(DataTypes.JSON),
-          allowNull: true, 
-            },
+           
             isAvailable: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true,

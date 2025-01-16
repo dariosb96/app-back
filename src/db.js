@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-// const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
+
 const {
    DB_USER_LOCAL,
    DB_PASSWORD_LOCAL,
@@ -15,19 +15,21 @@ const {
    DB_NAME_RAILWAY,
    DB_PORT_RAILWAY
  } = process.env;
- 
+ // LOCAL
+
 // const sequelize = new Sequelize(
-//    `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+//    `postgres://${DB_USER_LOCAL}:${DB_PASSWORD_LOCAL}@${DB_HOST_LOCAL}:${DB_PORT_LOCAL}/${DB_NAME_LOCAL}`,
 //    {
 //       logging: false, // set to console.log to see the raw SQL queries
 //       native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 //    }
 // );
+
+
+// RAILWAY DEPLOY
+
+
 const DB_HOST = process.env.NODE_ENV === 'production' ? 'postgres.railway.internal' : 'localhost';
-
-
-
-// asegúrate de que esto esté en la parte superior
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
    logging: false,
@@ -38,6 +40,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
      },
    },
 });
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
@@ -64,13 +67,11 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-// En sequelize.models están todos los modelos importados como propiedades
-// Para relacionarlos hacemos un destructuring
+
 
 const { Product, Sell } = sequelize.models;
 
-// Aca vendrian las relaciones
-// Product.hasMany(Reviews);
+
 Product.belongsToMany(Sell, { through: 'ProductSell' });
 Sell.belongsToMany(Product, { through: 'ProductSell' });
 
