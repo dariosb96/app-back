@@ -15,25 +15,11 @@ const getProductsHandler = async (req, res) => {
  };
  
 
-//create original local y deploy
 
-// const create_Product = async(req,res) =>{
-//    try{
-//      const {name, category, color, description, image, price, buyprice, stock } = req.body;
-//      const userId= req.userId;
-//      const newProduct = await createProduct(name, category, color, description, image, price, buyprice, stock, userId);
-//      res.status(201).json(newProduct);
-//    } catch(error) {
-//    console.log(error)
-//         res.status(400).send({error: error.message}); 
-//    }
-// };
 
 const create_Product = async (req, res) => {
      try {
-          console.log("Headers:", req.headers);  // Verifica los encabezados
-        console.log("Body:", req.body);  // Verifica el cuerpo
-        console.log("File:", req.file); 
+      
          const { name, category, color, description, price, buyprice, stock } = req.body;
          const userId = req.userId;
  
@@ -49,22 +35,6 @@ const create_Product = async (req, res) => {
  };
  
 
-  //primero funcionando en deploy
-// const getItemHandler = async (req,res) =>{ 
-
-//      try {
-//           const {id} = req.params;
-//           const product = await getProductById(id);
-//           if (product) {
-//                res.status(200).json(product);
-//              } else {
-//                res.status(404).json({ mensaje: "Product not found" });
-//              }
-        
-//      }catch(error) {
-//           res.status(400).send({error: error.message});
-//      }
-//  }
 
 const getItemHandler = async (req, res) => {
      const { id } = req.params;

@@ -5,22 +5,7 @@ const createProduct = async (name, category, color, description, image, price, b
     return newproduct;
 }
 
-//funcionando en deploy
-// const getProductById = async (id) => {
-//     const product = await Product.findByPk(id);
 
-//     if(product){
-//         return product;
-//     }
-//     const userId = id;
-//     const productsByUser = await Product.findAll({where: {userId}});
-
-//     if(productsByUser.length === 0){
-//         throw new Error("Product not found")
-//     }
-
-//     return productsByUser;
-//    }
 const getProductById = async (id, userId) => {
     const product = await Product.findOne({
         where: {
@@ -37,22 +22,7 @@ const getProductById = async (id, userId) => {
 };
 
 
-// !!!!! primer get funcionando en deploy
-// const getAllProducts = async (userId, name) =>{
-//     const products = await Product.findAll({where: {userId}});
-//     if (name){
-//         const productName = products.filter( product => product.name.includes(name)) ;
 
-//       if (productName.length === 0) {
-//         return "Product not found";
-//         }
-//         return productName;
-//     }
-
-//     return products;
-// }
-
-//segundo get 
 const getAllProducts = async (userId, name) => {
     const condition = { userId }; // Asegurarse de que solo busque los productos del usuario
 
@@ -121,4 +91,4 @@ const getProductsByCategory = async (userId, category) => {
 };
 
 
-module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct, getProductsByCategory, };
+module.exports = {createProduct, getProductById, getAllProducts, deleteProduct, deleteStock, updateProduct, getProductsByCategory, }; 

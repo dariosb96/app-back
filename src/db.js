@@ -15,31 +15,34 @@ const {
    DB_NAME_RAILWAY,
    DB_PORT_RAILWAY
  } = process.env;
+
  // LOCAL
 
-// const sequelize = new Sequelize(
-//    `postgres://${DB_USER_LOCAL}:${DB_PASSWORD_LOCAL}@${DB_HOST_LOCAL}:${DB_PORT_LOCAL}/${DB_NAME_LOCAL}`,
-//    {
-//       logging: false, // set to console.log to see the raw SQL queries
-//       native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-//    }
-// );
+const sequelize = new Sequelize(
+   `postgres://${DB_USER_LOCAL}:${DB_PASSWORD_LOCAL}@${DB_HOST_LOCAL}:${DB_PORT_LOCAL}/${DB_NAME_LOCAL}`,
+   {
+      logging: false, // set to console.log to see the raw SQL queries
+      native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+   }
+);
 
 
 // RAILWAY DEPLOY
 
 
-const DB_HOST = process.env.NODE_ENV === 'production' ? 'postgres.railway.internal' : 'localhost';
+// const DB_HOST = process.env.NODE_ENV === 'production' ? 'postgres.railway.internal' : 'localhost';
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-   logging: false,
-   dialectOptions: {
-     ssl: {
-       require: true,
-       rejectUnauthorized: false,
-     },
-   },
-});
+// const sequelize = new Sequelize(process.env.DATABASE_URL, {
+//    logging: false,
+//    dialectOptions: {
+//      ssl: {
+//        require: true,
+//        rejectUnauthorized: false,
+//      },
+//    },
+// });
+
+
 
 const basename = path.basename(__filename);
 
@@ -69,12 +72,25 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 
 
-const { Product, Sell } = sequelize.models;
+const { Product, Sell, User, ProductSell } = sequelize.models;
 
 
-Product.belongsToMany(Sell, { through: 'ProductSell' });
-Sell.belongsToMany(Product, { through: 'ProductSell' });
+// Product.belongsToMany(Sell, { through: 'ProductSell' });
+// Sell.belongsToMany(Product, { through: 'ProductSell' });
+User.hasMany(Sell, { foreignKey: "userId" });
+Sell.belongsTo(User, { foreignKey: "userId" });
 
+Product.belongsToMany(Sell, {
+    through: ProductSell,
+    foreignKey: 'ProductId',
+    otherKey: 'SellId'
+});
+
+Sell.belongsToMany(Product, {
+    through: ProductSell,
+    foreignKey: 'SellId',
+    otherKey: 'ProductId'
+});
 
 module.exports = {
    ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

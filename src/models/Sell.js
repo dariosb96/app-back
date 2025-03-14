@@ -1,22 +1,17 @@
-const { DataTypes } = require('sequelize');
+const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-   sequelize.define("Sell", 
-   {
+  sequelize.define("Sell", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV1,
     },
-       place: {
+    place: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    products: {
-      type: DataTypes.ARRAY(DataTypes.JSON),
-      allowNull: false,
-    },
-       status: {
+    status: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
@@ -28,9 +23,9 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        min:1,
+        min: 1,
         max: 12,
-      }
+      },
     },
     day: {
       type: DataTypes.INTEGER,
@@ -38,13 +33,20 @@ module.exports = (sequelize) => {
       validate: {
         min: 1,
         max: 31,
-      }
+      },
     },
     time: {
       type: DataTypes.TIME,
       allowNull: false,
-    }
-    
+    },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
   },
   {
     timestamps: true,
