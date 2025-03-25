@@ -74,11 +74,15 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 const { Product, Sell, User, ProductSell } = sequelize.models;
 
+// Relaciones de usuario (Superadmin, Admin, Employee)
+User.hasMany(User, { as: 'Employees', foreignKey: 'adminId' }); // Un Admin tiene muchos Employees
+User.belongsTo(User, { as: 'Admin', foreignKey: 'adminId' }); // Un Employee pertenece a un Admin
 
-// Product.belongsToMany(Sell, { through: 'ProductSell' });
-// Sell.belongsToMany(Product, { through: 'ProductSell' });
-User.hasMany(Sell, { foreignKey: "userId" });
-Sell.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Product, { foreignKey: 'adminId' });
+Product.belongsTo(User, { as: 'Admin', foreignKey: 'adminId' });
+
+User.hasMany(Sell, { foreignKey: 'userId' });
+Sell.belongsTo(User, { foreignKey: 'userId' });
 
 Product.belongsToMany(Sell, {
     through: ProductSell,
@@ -93,6 +97,7 @@ Sell.belongsToMany(Product, {
 });
 
 module.exports = {
-   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
-   conn: sequelize, // para importart la conexión { conn } = require('./db.js');
+   ...sequelize.models,
+   conn: sequelize,
 };
+

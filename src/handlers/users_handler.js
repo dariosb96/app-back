@@ -3,7 +3,7 @@ const {User} = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = "secret"
-const { getAllUsers, getUserByid, createUser, deleteUser, updateUser, loginUser } = require("../controllers/user_controller");
+const { getAllUsers, getUserByid, createUser, deleteUser, updateUser, loginUser, approveUser } = require("../controllers/user_controller");
 
 const getUsers = async (req, res) => {
     try {
@@ -27,8 +27,8 @@ const getUserBy = async (req, res) => {
 
 const createUserHandler = async (req, res) => {
     try{
-        const {name, username, email, password, isAdmin} = req.body;
-        const newUser = await createUser(name, username, email, password, isAdmin);
+        const {name, username, email, password, role} = req.body;
+        const newUser = await createUser(name, username, email, password, role);
         res.status(201).json(newUser);
     }catch(error){
         res.status(400).json({error: error.message})
@@ -68,7 +68,9 @@ const LoginUserHandler = async (req, res) => {
         if (!user) {
             throw new Error("User not found");
         }
-
+        
+        if(!user.approved)throw new Error("User is not approved");
+        
         // Luego, comparamos las contraseñas
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
@@ -76,7 +78,7 @@ const LoginUserHandler = async (req, res) => {
         }
 
         // Ahora generamos el token después de validar que el usuario existe y la contraseña es correcta
-        const token = jwt.sign({ id: user.id }, secret, { expiresIn: "1h" });
+        const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: "1h" });
 
         // Enviamos la respuesta con el token y los datos del usuario
         res.status(200).json({
@@ -101,6 +103,43 @@ const LoginUserHandler = async (req, res) => {
 };
 
 
+
+
+const approveUserHandler = async (req, res) => {
+    try {
+        const { id } = req.params; // ID del usuario a aprobar
+        const { approverId } = req.body; // ID del usuario que aprueba
+        
+        // Extraer el token del header
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) throw new Error("Token required");
+
+        // Verificar el token
+        const decoded = jwt.verify(token, secret);
+        if (!decoded) throw new Error("Invalid token");
+
+        // Validar el rol del usuario que aprueba
+        if ((decoded.role === "employee") || (decoded.role === "admin" && id !== "employee")) {
+            throw new Error("Unauthorized action");
+        }
+        // Aprobar usuario
+        const approvedUser = await approveUser(id, approverId);
+        res.status(200).json({ message: `User ${approvedUser.username} approved successfully!`, approvedUser });
+    } catch (error) {
+        res.status(403).json({ error: error.message });
+    }
+};
+
+
+
+
+
 module.exports = {
-    getUsers, getUserBy, createUserHandler, deleteUserHandler, updateUserHandler, LoginUserHandler
+    getUsers, 
+    getUserBy, 
+    createUserHandler, 
+    deleteUserHandler, 
+    updateUserHandler, 
+    LoginUserHandler,
+    approveUserHandler
 }
